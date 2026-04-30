@@ -98,6 +98,10 @@ const quiz = document.querySelector('#quiz');
 // Seleciona o template HTML que será duplicado
 const template = document.querySelector('template');
 
+const corretas = new Set()
+const totalDePerguntas =  perguntas.length
+const mostrarTotal  = document.querySelector('#acertos span')
+
 
 //Para cada objeto dentro do array perguntas, guarde esse objeto na variável item.
 for (const item of perguntas) {
@@ -116,8 +120,17 @@ for (const item of perguntas) {
     const dt = quizItem.querySelector('dl dt').cloneNode(true);
 
     // Troca o texto da alternativa
-    dt.querySelector('span').textContent = resposta;
-
+    dt.querySelector('span').textContent = resposta
+    dt.querySelector('input').setAttribute('name', 'pergunta-' + perguntas.indexOf(item))
+    dt.querySelector('input').value = item.respostas.indexOf(resposta)
+    dt.querySelector('input').onchange = (event) => {
+      const estaCorreta = event.target.value == item.correta
+      corretas.delete(item)
+      if(estaCorreta) {
+        corretas.add(item)
+      }
+      mostrarTotal.textContent = corretas.size + ' de ' + totalDePerguntas
+    }
     // Adiciona a nova alternativa dentro da lista
     quizItem.querySelector('dl').appendChild(dt);
   }
