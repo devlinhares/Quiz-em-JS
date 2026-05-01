@@ -1,143 +1,97 @@
-// Array com todas as perguntas do quiz
+//========== ARRAY DE PERGUNTAS =========
 const perguntas = [
   {
     pergunta: "O que significa JS em programação?",
-    respostas: [
-      "JavaStyle",
-      "JavaScript",
-      "JsonScript"
-    ],
-    correta: 1
+    respostas: ["JavaStyle", "JavaScript", "JsonScript"],
+    correta: 1  // índice da resposta certa (começa em 0)
   },
   {
     pergunta: "Qual comando exibe uma mensagem em alerta no navegador?",
-    respostas: [
-      "alert()",
-      "print()",
-      "msg()"
-    ],
+    respostas: ["alert()", "print()", "msg()"],
     correta: 0
   },
   {
     pergunta: "Qual palavra é usada para declarar uma variável?",
-    respostas: [
-      "var",
-      "loop",
-      "if"
-    ],
+    respostas: ["var", "loop", "if"],
     correta: 0
   },
   {
     pergunta: "Qual símbolo é usado para comentários de uma linha?",
-    respostas: [
-      "##",
-      "//",
-      "**"
-    ],
+    respostas: ["##", "//", "**"],
     correta: 1
   },
   {
     pergunta: "Qual estrutura é usada para tomar decisões?",
-    respostas: [
-      "if",
-      "for",
-      "while"
-    ],
+    respostas: ["if", "for", "while"],
     correta: 0
   },
   {
     pergunta: "Qual laço repete enquanto a condição for verdadeira?",
-    respostas: [
-      "switch",
-      "while",
-      "case"
-    ],
+    respostas: ["switch", "while", "case"],
     correta: 1
   },
   {
     pergunta: "Qual operador representa igualdade estrita?",
-    respostas: [
-      "==",
-      "===",
-      "="
-    ],
+    respostas: ["==", "===", "="],
     correta: 1
   },
   {
     pergunta: "Qual tipo de dado representa verdadeiro ou falso?",
-    respostas: [
-      "Number",
-      "Boolean",
-      "String"
-    ],
+    respostas: ["Number", "Boolean", "String"],
     correta: 1
   },
   {
     pergunta: "Qual método adiciona item ao final de um array?",
-    respostas: [
-      "push()",
-      "pop()",
-      "shift()"
-    ],
+    respostas: ["push()", "pop()", "shift()"],
     correta: 0
   },
   {
     pergunta: "Qual comando imprime algo no console?",
-    respostas: [
-      "console.log()",
-      "write.log()",
-      "show.console()"
-    ],
+    respostas: ["console.log()", "write.log()", "show.console()"],
     correta: 0
   }
 ];
 
-// Seleciona a div onde o quiz será exibido
-const quiz = document.querySelector('#quiz');
+// ========== ELEMENTOS DO DOM ==========
+const quiz = document.querySelector('#quiz');           // onde as perguntas vão aparecer
+const template = document.querySelector('template');    // molde de cada pergunta
 
-// Seleciona o template HTML que será duplicado
-const template = document.querySelector('template');
+const corretas = new Set()                              // guarda as perguntas que o usuário acertou
+const totalDePerguntas = perguntas.length               // total = 10
+const mostrarTotal = document.querySelector('#acertos span')  // elemento que mostra o placar
 
-const corretas = new Set()
-const totalDePerguntas =  perguntas.length
-const mostrarTotal  = document.querySelector('#acertos span')
+// ========== CRIAÇÃO DAS PERGUNTAS ==========
+for (const item of perguntas) {                         // percorre cada pergunta do array
 
+  const quizItem = template.content.cloneNode(true);    // clona o molde da pergunta
 
-//Para cada objeto dentro do array perguntas, guarde esse objeto na variável item.
-for (const item of perguntas) {
+  quizItem.querySelector('h3').textContent = item.pergunta;  // coloca o texto da pergunta
 
-  // Clona o conteúdo do template
-  const quizItem = template.content.cloneNode(true);
+  // Cria as alternativas de resposta
+  for (let resposta of item.respostas) {                // percorre cada resposta
 
-  // Substitui o título pela pergunta atual
-  quizItem.querySelector('h3').textContent = item.pergunta;
+    const dt = quizItem.querySelector('dl dt').cloneNode(true);  // clona o modelo de alternativa
 
+    dt.querySelector('span').textContent = resposta;    // coloca o texto da alternativa
 
-  // Percorre cada resposta da pergunta
-  for (let resposta of item.respostas) {
-
-    // Clona o modelo de alternativa
-    const dt = quizItem.querySelector('dl dt').cloneNode(true);
-
-    // Troca o texto da alternativa
-    dt.querySelector('span').textContent = resposta
-    dt.querySelector('input').setAttribute('name', 'pergunta-' + perguntas.indexOf(item))
-    dt.querySelector('input').value = item.respostas.indexOf(resposta)
+    // Configura o botão de rádio
+    dt.querySelector('input').setAttribute('name', 'pergunta-' + perguntas.indexOf(item))  // nome único por pergunta
+    dt.querySelector('input').value = item.respostas.indexOf(resposta)  // value = 0, 1 ou 2
+    
+    // Evento disparado quando o usuário seleciona uma resposta
     dt.querySelector('input').onchange = (event) => {
-      const estaCorreta = event.target.value == item.correta
-      corretas.delete(item)
+      const estaCorreta = event.target.value == item.correta  // verifica se acertou
+      corretas.delete(item)                                   // remove a pergunta do set de acertos
       if(estaCorreta) {
-        corretas.add(item)
+        corretas.add(item)                                    // adiciona de volta se acertou
       }
-      mostrarTotal.textContent = corretas.size + ' de ' + totalDePerguntas
+      mostrarTotal.textContent = corretas.size + ' de ' + totalDePerguntas  // atualiza placar
     }
-    // Adiciona a nova alternativa dentro da lista
-    quizItem.querySelector('dl').appendChild(dt);
+
+    quizItem.querySelector('dl').appendChild(dt);   // adiciona alternativa na lista
   }
 
-  // Remove a alternativa modelo original do template
-  quizItem.querySelector('dl dt').remove();
+  quizItem.querySelector('dl dt').remove();   // remove o modelo de alternativa original
 
-  // Adiciona a pergunta pronta na tela
-  quiz.appendChild(quizItem);
+  quiz.appendChild(quizItem);  // coloca a pergunta pronta na tela
 }

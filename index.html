@@ -4,48 +4,41 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Quiz</title>
-    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="./style.css">
 </head>
 <body>
-
-
-
-
+<main>
+  <header>
     <h1>Teste seus Conhecimentos</h1>
+  </header>
 
-<div id="quiz"></div>
+  <!-- Container onde o JS vai inserir as perguntas dinamicamente -->
+  <div id="quiz"></div>
 
+  <!-- Template: molde que o JS clona para cada pergunta -->
+  <template>
+    <div class="quiz-item">
+      <h3>
+        Pergunta 01 <!-- Será substituído pelo texto da pergunta -->
+      </h3>
+      <dl>
+        <dt>
+          <!-- Radio: value será o índice da resposta (0,1,2...) -->
+          <input type="radio" name="item" value="0">
+          <span>
+            Resposta A <!-- Será substituído pelo texto da alternativa -->
+          </span>
+        </dt>
+      </dl>
+    </div>
+  </template>
 
-<!-- Template usado para repetir perguntas dinamicamente com JavaScript -->
-<template>
-  <!-- Bloco principal de cada pergunta -->
-  <div class="quiz-item">
-    <h3>
-      Pergunta 01
-    </h3>
-    <!-- Lista de alternativas -->
-    <dl>
-      <!-- Alternativa individual -->
-      <dt>
-        <!-- Botão de seleção (resposta única) -->
-        <input type="radio" name="item" value="0">
-        <!-- Texto exibido ao lado da opção -->
-        <span>
-          Resposta A
-        </span>
-      </dt>
-    </dl>
+  <!-- Placar fixo na parte inferior -->
+  <div id="acertos">
+    <strong>Acertos</strong>
+    <span>0 de 10</span> <!-- JS atualiza este número -->
   </div>
-</template>
-
-<div id="acertos">
-  <strong>Acertos</strong>
-  <span> 0 de 10</span>
-
-</div>
-
-
-
+</main>
     <script src="./script.js"></script>    
 </body>
 </html>
